@@ -22,7 +22,7 @@ export default function DrivingSchoolLanding() {
           <Image
           width={400}
           height={400}
-            src="https://images.pexels.com/photos/9518019/pexels-photo-9518019.jpeg"
+            src="https://images.pexels.com/photos/1386649/pexels-photo-1386649.jpeg"
             alt="Modern car dashboard"
             className="w-full h-full object-cover"
           />
@@ -58,9 +58,9 @@ export default function DrivingSchoolLanding() {
               />
             </div>
             <div className="order-1 md:order-2">
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">About DriveFlow</h2>
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">About FZL Drivers Club</h2>
               <p className="text-gray-700 text-lg leading-relaxed mb-8">
-                With over 15 years of experience, DriveFlow is committed to making you a confident and safe driver. Our certified instructors use modern teaching methods combined with real-world driving experience to prepare you for any road condition. Whether you are a complete beginner or looking to improve your advanced driving skills, we have a program tailored just for you.
+                With over 15 years of experience, FZL Drivers Club is committed to making you a confident and safe driver. Our certified instructors use modern teaching methods combined with real-world driving experience to prepare you for any road condition. Whether you are a complete beginner or looking to improve your advanced driving skills, we have a program tailored just for you.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
