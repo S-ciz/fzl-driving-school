@@ -2,7 +2,8 @@
 import Header from "@/app/components/Header";
 import { Button } from "@/components/ui/button";
 
-import { getBookings } from "@/prisma/actions/booking";
+import { getBooking } from "@/api";
+
 import {
   Dialog,
   DialogClose,
@@ -15,14 +16,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
-import React, { useEffect, useState} from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
 import { Label } from "@/components/ui/label";
-import { Booking } from "@/lib/types";
+import { Booking, Status } from "@/lib/types";
 import TableDemo from "@/app/components/Table";
+
+import { postBooking, genID } from "@/api";
 
 function DialogDemo() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  const [time, setTime] = useState<string>("");
+  const [duration, setDuration] = useState<string>("");
+
+  //form submsion function
+  function bookSession() {
+    if (time.length > 0 && time.length > 0) {
+      let stID = sessionStorage.getItem("fzl-user");
+      if (stID == null) {
+        stID = "";
+      }
+
+      const obj = {
+        id: genID(),
+        studentId: stID,
+        status: "PENDING",
+        createdAt: new Date().toString(),
+        date: `${date?.getDay()}/${date?.getMonth()}/${date?.getFullYear()} ${time}`,
+        durationHrs: parseInt(duration),
+      };
+
+      postBooking(obj).then((res) => {
+        if (res.success) {
+          alert("Succesfully booked a session");
+        }
+      });
+    }
+  }
   return (
     <Dialog>
       <form>
@@ -46,13 +77,28 @@ function DialogDemo() {
             captionLayout="dropdown"
           />
           <Label>Time</Label>
-          <Input placeholder="Time" type="time" />
+          <Input
+            required
+            onChange={(e) => setTime(e.target.value)}
+            placeholder="Time"
+            type="time"
+          />
+          <Label>Duration</Label>
+          <Input
+            required
+            onChange={(e) => setDuration(e.target.value)}
+            min={1}
+            max={5}
+            type="number"
+          />
 
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button onClick={bookSession} type="submit">
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </form>
@@ -60,15 +106,22 @@ function DialogDemo() {
   );
 }
 
-
 export default function UserComp({}) {
-  const searchParams = useSearchParams();
-  const id = Number(searchParams.get("id"));
   const [bookings, setData] = useState<Booking[]>();
 
   useEffect(() => {
-    getBookings(id).then((res) => setData(res));
-  }, [id]);
+    let id = sessionStorage.getItem("fzl-user");
+
+    if (id == null) {
+      id = "";
+    }
+
+    getBooking(id).then((res) => {
+      if (res.success) {
+        setData(res.data);
+      }
+    });
+  }, []);
 
   function status(): { pend: number; completed: number } {
     if (bookings == undefined) {
@@ -83,7 +136,6 @@ export default function UserComp({}) {
     };
   }
 
- 
   return (
     <>
       <Header />

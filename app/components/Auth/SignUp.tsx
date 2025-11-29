@@ -4,7 +4,6 @@ import Header from "../Header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { postUser } from "@/prisma/actions/user";
 import {
   Card,
   CardAction,
@@ -29,21 +28,7 @@ export default function SignUp() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setMsg("Passwords do not match");
-    } else {
-      const name = email.split("@")[0];
-      const res = await postUser(name, email, password);
-      if (res.status) {
-        //true: signup
-        setMsg("Successfully created your account");
-
-        // window.location.pathname = "/pages/signIn";
-        router.push("/pages/signIn")
-      } else {
-        setMsg("User with credentials already exists");
-      }
-    }
+   
   }
 
   return (

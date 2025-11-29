@@ -4,6 +4,10 @@ import Header from "../Header";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+//api
+
+import { getUser } from "@/api";
+
 import {
   Card,
   CardAction,
@@ -16,10 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
-import { getUser } from "@/prisma/actions/user";
 
 export default function SignIn() {
-  const route = useRouter()
+  const route = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validUser, setValidUser] = useState(false);
@@ -27,34 +30,34 @@ export default function SignIn() {
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
 
-    const current_user = await getUser(email, password);
-
-    if (current_user != null) {
-      const role = current_user.role;
-
-      sessionStorage.setItem("current_user", JSON.stringify(current_user));
-
-      switch (role) {
-        case "STUDENT": {
-          route.push(`/pages/user?id=${current_user.id}`)
-          //window.location.pathname = "/pages/user";
-          break;
+    getUser(email, password)
+      .then((res) => {
+        if (res.success) {
+          const user = res.data;
+          //save to session
+          sessionStorage.setItem("fzl-user", user.id);
+          switch (user.role) {
+            case "ADMIN": {
+              setValidUser(true);
+              route.push("/pages/admin");
+              break;
+            }
+            case "STUDENT": {
+              setValidUser(true);
+              route.push("/pages/user");
+              break;
+            }
+          }
+        } else {
+          setValidUser(false);
         }
-        case "ADMIN": {
-          route.push("/pages/admin")
-         // window.location.pathname = "pages/admin";
-          break;
-        }
-      }
-    } else {
-      setValidUser(true);
-    }
+      })
+      .catch((err) => console.log("error", err));
   }
 
   return (
     <>
       <Header />
-
       <Card className="w-full m-auto mt-10 max-w-sm">
         {validUser ? (
           <p className="bg-red-500 text-white text-center w-[90%] p-2 m-auto rounded">

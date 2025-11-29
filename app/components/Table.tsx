@@ -35,7 +35,7 @@ export default function TableDemo({bookings}:{bookings:Booking[]}) {
             <TableCell>{book.durationHrs} hrs</TableCell>
             <TableCell>{book.date.toString()}</TableCell>
             <TableCell className="text-right flex gap-2 items-center justify-end">
-              <span><Delete/> </span>
+              <span><Delete id={book.id}/> </span>
                <Button variant="outline"><Pencil/></Button>
                 </TableCell>
           </TableRow>

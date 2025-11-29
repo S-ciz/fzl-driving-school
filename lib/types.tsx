@@ -1,22 +1,21 @@
 
 export type Role = "ADMIN" | "STUDENT"
 export type Status = "PENDING" | "COMPLETED" | "CANCELLED"; 
+
 export type Booking = {
-  id: number;
-  student: User;
-  studentId: number;
-  date: Date;
+  id: string;
+  studentId: string,
+  date: string;
   durationHrs: number;
-  status: Status;
-  createdAt: Date;
+  status: string;
+  createdAt: string;
 };
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   password: string;
   role: Role;
-  bookings: Booking[];
-  createdAt?: Date;
+  createdAt?: string;
 };
